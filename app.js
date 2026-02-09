@@ -97,7 +97,7 @@ const App = {
 
         container.innerHTML = cards.map(card => `
             <div class="card-item" data-id="${card.id}">
-                <img class="card-thumb" src="${card.combinedImage}" alt="${card.name}">
+                <img class="card-thumb" src="${card.frontImage || card.combinedImage}" alt="${card.name}">
                 <div class="card-info">
                     <h3>${card.name}</h3>
                     <p>📍 ${card.locations?.length || 0}件の地点登録</p>
@@ -138,7 +138,7 @@ const App = {
 
             container.innerHTML = recommended.map(card => `
                 <div class="recommend-card" data-id="${card.id}">
-                    <img src="${card.combinedImage}" alt="${card.name}">
+                    <img src="${card.frontImage || card.combinedImage}" alt="${card.name}">
                     <span class="distance-badge">${GPS.formatDistance(card.nearestDistance)}</span>
                     <span class="card-name">${card.name}</span>
                 </div>
