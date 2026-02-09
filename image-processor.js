@@ -36,25 +36,29 @@ const ImageProcessor = {
     },
 
     // 2枚の画像を縦に合成（表面 + バーコード）
+    // バーコードは読み取り可能なサイズを維持
     async combine(frontImageDataUrl, barcodeImageDataUrl) {
         const [frontImg, barcodeImg] = await Promise.all([
             this.loadImage(frontImageDataUrl),
             this.loadImage(barcodeImageDataUrl)
         ]);
 
-        // 幅を統一（大きい方に合わせる）
-        const targetWidth = Math.max(frontImg.width, barcodeImg.width);
+        // 出力幅を統一（640px）
+        const targetWidth = 640;
 
-        // 各画像の高さを計算
+        // 表面のリサイズ高さを計算
         const frontHeight = (frontImg.height * targetWidth) / frontImg.width;
-        const barcodeHeight = (barcodeImg.height * targetWidth) / barcodeImg.width;
 
-        // バーコード部分は少し小さく（全体の30%程度）
-        const scaledBarcodeHeight = Math.min(barcodeHeight, frontHeight * 0.35);
+        // バーコードはオリジナルのアスペクト比を維持しつつ、幅を合わせる
+        // ただし最低でも80pxの高さを確保（読み取り可能性のため）
+        const barcodeHeight = Math.max(
+            (barcodeImg.height * targetWidth) / barcodeImg.width,
+            80
+        );
 
         const canvas = document.createElement('canvas');
         canvas.width = targetWidth;
-        canvas.height = frontHeight + scaledBarcodeHeight + 10; // 間に10pxの余白
+        canvas.height = frontHeight + barcodeHeight + 16; // 間に16pxの余白
 
         const ctx = canvas.getContext('2d');
 
@@ -65,11 +69,15 @@ const ImageProcessor = {
         // 表面を描画
         ctx.drawImage(frontImg, 0, 0, targetWidth, frontHeight);
 
-        // バーコードを描画
-        const barcodeY = frontHeight + 10;
-        ctx.drawImage(barcodeImg, 0, barcodeY, targetWidth, scaledBarcodeHeight);
+        // 区切り線
+        ctx.fillStyle = '#dddddd';
+        ctx.fillRect(0, frontHeight + 6, targetWidth, 2);
 
-        return canvas.toDataURL('image/jpeg', 0.7);
+        // バーコードを描画（縮小しない）
+        const barcodeY = frontHeight + 16;
+        ctx.drawImage(barcodeImg, 0, barcodeY, targetWidth, barcodeHeight);
+
+        return canvas.toDataURL('image/jpeg', 0.85); // 品質を上げる
     },
 
     // 画像読み込みヘルパー

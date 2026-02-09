@@ -33,21 +33,37 @@ const Camera = {
         }
     },
 
-    // 撮影（スナップショット）
+    // 撮影（スナップショット） - ガイド枠でクロップ
     capture() {
         if (!this.videoElement || !this.stream) {
             throw new Error('Camera not started');
         }
 
-        const canvas = document.createElement('canvas');
         const videoWidth = this.videoElement.videoWidth;
         const videoHeight = this.videoElement.videoHeight;
 
-        canvas.width = videoWidth;
-        canvas.height = videoHeight;
+        // ガイド枠のサイズを計算（画面の85%幅、アスペクト比1.6:1）
+        const guideWidthRatio = 0.85;
+        const aspectRatio = 1.6;
+
+        const cropWidth = videoWidth * guideWidthRatio;
+        const cropHeight = cropWidth / aspectRatio;
+
+        // 中央にクロップ
+        const cropX = (videoWidth - cropWidth) / 2;
+        const cropY = (videoHeight - cropHeight) / 2;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = cropWidth;
+        canvas.height = cropHeight;
 
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(this.videoElement, 0, 0, videoWidth, videoHeight);
+        // クロップ範囲のみを描画
+        ctx.drawImage(
+            this.videoElement,
+            cropX, cropY, cropWidth, cropHeight,  // ソース範囲
+            0, 0, cropWidth, cropHeight           // 出力範囲
+        );
 
         return canvas.toDataURL('image/jpeg', 0.9);
     },
