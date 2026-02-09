@@ -214,15 +214,23 @@ const App = {
             if (!card) return;
 
             const newName = prompt('新しいカード名を入力してください:', card.name);
-            if (newName === null || newName.trim() === '') return; // キャンセルまたは空文字
+            // newName === null means Cancel
+            if (newName === null) return;
 
-            card.name = newName.trim();
+            const trimmedName = newName.trim();
+            if (trimmedName === '' || trimmedName === card.name) return;
+
+            card.name = trimmedName;
             await CardDB.updateCard(card);
 
-            // 表示更新
+            // UIの表示を更新
             document.getElementById('detail-title').textContent = card.name;
-            await this.loadCards(); // 一覧も更新しておく
 
+            // 一覧とレコメンドの両方を更新
+            await this.loadCards();
+            await this.refreshRecommendations();
+
+            console.log('Card name updated successfully:', card.id, card.name);
         } catch (error) {
             console.error('Failed to update card name:', error);
             alert('カード名の変更に失敗しました');
