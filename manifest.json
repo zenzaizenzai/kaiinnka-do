@@ -1,7 +1,7 @@
 {
-    "name": "カードウォレット",
-    "short_name": "カードウォレット",
-    "description": "GPSで自動レコメンド！ポイントカード・会員カードをスマホで管理",
+    "name": "会員証スクショアプリ",
+    "short_name": "会員証スクショ",
+    "description": "GPSで自動レコメンド！会員証・ポイントカードをスマホで管理",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#0f0f1a",
