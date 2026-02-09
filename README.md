@@ -2,6 +2,8 @@
 
 GPSで自動レコメンド！ポイントカード・会員カードをスマホで管理するPWA
 
+🌐 **デモ**: https://zenzaizenzai.github.io/kaiinnka-do/
+
 ## ✨ 主な機能
 
 ### 1. 2in1カード撮影
