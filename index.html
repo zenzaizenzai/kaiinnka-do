@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="GPSで自動レコメンド！ポイントカード・会員カードをスマホで管理">
+    <title>カードウォレット</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- ホーム画面 -->
+        <div id="home-screen" class="screen active">
+            <header class="app-header">
+                <h1>💳 カードウォレット</h1>
+                <button id="refresh-gps" class="icon-btn" aria-label="位置情報を更新">📍</button>
+            </header>
+
+            <!-- GPS連動レコメンド -->
+            <section id="recommend-section">
+                <h2>📍 現在地のおすすめ</h2>
+                <div id="recommend-cards" class="card-grid">
+                    <!-- 動的に生成 -->
+                </div>
+                <p id="gps-status" class="status-text">位置情報を取得中...</p>
+            </section>
+
+            <!-- 全カード一覧 -->
+            <section id="all-cards-section">
+                <h2>すべてのカード</h2>
+                <div id="all-cards" class="card-list">
+                    <!-- 動的に生成 -->
+                </div>
+            </section>
+
+            <!-- 追加ボタン -->
+            <button id="add-card-btn" class="fab" aria-label="カードを追加">＋</button>
+        </div>
+
+        <!-- カード詳細画面 -->
+        <div id="detail-screen" class="screen">
+            <header class="detail-header">
+                <button id="back-btn" class="icon-btn">←</button>
+                <h2 id="detail-title">カード名</h2>
+                <button id="edit-btn" class="icon-btn">✏️</button>
+            </header>
+            <div id="card-image-container">
+                <img id="card-image" src="" alt="カード画像">
+            </div>
+            <div class="detail-actions">
+                <button id="add-location-btn" class="action-btn">
+                    📍 現在地をこのカードに追加
+                </button>
+                <div id="locations-list"></div>
+            </div>
+            <button id="delete-card-btn" class="danger-btn">🗑️ このカードを削除</button>
+        </div>
+
+        <!-- カード撮影画面 -->
+        <div id="capture-screen" class="screen">
+            <header class="capture-header">
+                <button id="cancel-capture-btn" class="icon-btn">✕</button>
+                <h2 id="capture-title">表面を撮影</h2>
+            </header>
+            <div id="camera-container">
+                <video id="camera-preview" autoplay playsinline></video>
+                <div class="capture-guide">
+                    <div class="guide-frame"></div>
+                </div>
+            </div>
+            <div class="capture-controls">
+                <button id="capture-btn" class="shutter-btn" aria-label="撮影">📷</button>
+            </div>
+            <div id="capture-preview" class="hidden">
+                <img id="preview-image" src="" alt="プレビュー">
+                <div class="preview-actions">
+                    <button id="retake-btn" class="secondary-btn">撮り直す</button>
+                    <button id="confirm-btn" class="primary-btn">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- カード名入力画面 -->
+        <div id="name-screen" class="screen">
+            <header class="name-header">
+                <button id="name-back-btn" class="icon-btn">←</button>
+                <h2>カード情報を入力</h2>
+            </header>
+            <div class="name-content">
+                <div id="combined-preview">
+                    <img id="combined-image" src="" alt="合成画像">
+                </div>
+                <div class="input-group">
+                    <label for="card-name-input">カード名</label>
+                    <input type="text" id="card-name-input" placeholder="例: セブンイレブン nanaco">
+                </div>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="add-current-location">
+                    📍 現在地を登録する
+                </label>
+                <button id="save-card-btn" class="primary-btn full-width">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 読み込み順を考慮 -->
+    <script src="db.js"></script>
+    <script src="image-processor.js"></script>
+    <script src="gps.js"></script>
+    <script src="recommender.js"></script>
+    <script src="camera.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
