@@ -48,6 +48,7 @@ const App = {
 
         // 詳細画面
         document.getElementById('back-btn').addEventListener('click', () => this.showScreen('home'));
+        document.getElementById('edit-btn').addEventListener('click', () => this.editCardName());
         document.getElementById('add-location-btn').addEventListener('click', () => this.addCurrentLocation());
         document.getElementById('delete-card-btn').addEventListener('click', () => this.deleteCurrentCard());
 
@@ -201,6 +202,30 @@ const App = {
             this.showScreen('detail');
         } catch (error) {
             console.error('Failed to show card detail:', error);
+        }
+    },
+
+    // カード名編集
+    async editCardName() {
+        if (!this.currentCardId) return;
+
+        try {
+            const card = await CardDB.getCard(this.currentCardId);
+            if (!card) return;
+
+            const newName = prompt('新しいカード名を入力してください:', card.name);
+            if (newName === null || newName.trim() === '') return; // キャンセルまたは空文字
+
+            card.name = newName.trim();
+            await CardDB.updateCard(card);
+
+            // 表示更新
+            document.getElementById('detail-title').textContent = card.name;
+            await this.loadCards(); // 一覧も更新しておく
+
+        } catch (error) {
+            console.error('Failed to update card name:', error);
+            alert('カード名の変更に失敗しました');
         }
     },
 
